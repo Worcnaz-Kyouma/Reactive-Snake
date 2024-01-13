@@ -40,59 +40,54 @@ type GameData = {
 export default function Board({ rowSize, columnSize, gameStatus, setGameStatus, snakeData, setSnakeData, movementVector, setMovementVector, fieldsValue, setFieldsValue } : GameData) {
     const processLooperIDRef = useRef<number | undefined>(undefined)
     
-    async function moveHead() {
-        let isApple = false
+    function moveHead() {
+        return new Promise<boolean>(resolve => {
+            let isApple = false
 
-        const newFieldsValue = [ ...fieldsValue ]
-        
-        let currentMovementVector = {x:0, y:0}
+            const newFieldsValue = [ ...fieldsValue ]
 
-        await new Promise((resolve, reject) => {
             setMovementVector(movementVector => {
-                currentMovementVector = movementVector
-                resolve(currentMovementVector)
+                let nextX = snakeData.headPosition.x + movementVector.x
+                if(nextX >= rowSize)
+                    nextX = 0
+                else if(nextX < 0)
+                    nextX = rowSize - 1
+                let nextY = snakeData.headPosition.y + movementVector.y
+                if(nextY >= columnSize)
+                    nextY = 0
+                else if(nextY < 0)
+                    nextY = columnSize - 1
+
+                if(fieldsValue[nextX][nextY] === 14488883){
+                    isApple = true
+                    const newApplePosition = {
+                        x: 0, 
+                        y: 0
+                    }
+                    do{
+                        newApplePosition.x = Math.floor(Math.random() * rowSize)
+                        newApplePosition.y = Math.floor(Math.random() * columnSize)
+                    } while(fieldsValue[newApplePosition.x][newApplePosition.y] > 0)
+                    fieldsValue[newApplePosition.x][newApplePosition.y] = 14488883
+
+                } else if(fieldsValue[nextX][nextY] > 0){
+                    setGameStatus(0)
+                }
+
+                newFieldsValue[nextX][nextY] = snakeData.length + 1
+
+                const newSnakeData = { 
+                    headPosition: { x: nextX,y: nextY  },
+                    length: snakeData.length + (isApple ? 1 : 0)
+                }
+
+                setSnakeData(newSnakeData)
+                setFieldsValue(newFieldsValue)
+
+                resolve(isApple)
                 return movementVector
             })
         })
-
-        let nextX = snakeData.headPosition.x + currentMovementVector.x
-        if(nextX >= rowSize)
-            nextX = 0
-        else if(nextX < 0)
-            nextX = rowSize - 1
-        let nextY = snakeData.headPosition.y + currentMovementVector.y
-        if(nextY >= columnSize)
-            nextY = 0
-        else if(nextY < 0)
-            nextY = columnSize - 1
-
-        if(fieldsValue[nextX][nextY] === 14488883){
-            isApple = true
-            const newApplePosition = {
-                x: 0, 
-                y: 0
-            }
-            do{
-                newApplePosition.x = Math.floor(Math.random() * rowSize)
-                newApplePosition.y = Math.floor(Math.random() * columnSize)
-            } while(fieldsValue[newApplePosition.x][newApplePosition.y] > 0)
-            fieldsValue[newApplePosition.x][newApplePosition.y] = 14488883
-
-        } else if(fieldsValue[nextX][nextY] > 0){
-            setGameStatus(0)
-        }
-
-        newFieldsValue[nextX][nextY] = snakeData.length + 1
-
-        const newSnakeData = { 
-            headPosition: { x: nextX,y: nextY  },
-            length: snakeData.length + (isApple ? 1 : 0)
-        }
-
-        setSnakeData(newSnakeData)
-        setFieldsValue(newFieldsValue)
-
-        return isApple
     }
 
     function updateBoard(isAppleEatted:boolean) {
