@@ -101,6 +101,13 @@ export default function Game() {
         return status
     }
 
+    /*
+    if(isGameRunning)
+        setTimeout(() => {
+            const status = process()
+        }, 1000)
+    */
+
     useEffect(() => {
         const timer = setTimeout(() => {
             const status = process()
