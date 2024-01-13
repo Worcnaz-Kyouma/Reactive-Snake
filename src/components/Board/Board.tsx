@@ -37,7 +37,7 @@ type GameData = {
     setFieldsValue: React.Dispatch<React.SetStateAction<number[][]>>
 }
 
-export default function Board({ rowSize, columnSize, gameStatus, setGameStatus, snakeData, setSnakeData, movementVector, setMovementVector, fieldsValue, setFieldsValue } : GameData) {
+export default function Board({ rowSize, columnSize, gameStatus, setGameStatus, snakeData, setSnakeData, setMovementVector, fieldsValue, setFieldsValue } : GameData) {
     const processLooperIDRef = useRef<number | undefined>(undefined)
     
     function moveHead() {
