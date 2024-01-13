@@ -10,8 +10,8 @@ export default function Game() {
     /** */
 
     const [ gameStatus, setGameStatus ] = useState(1)
-    const rowSize = 8
-    const columnSize = 8
+    const rowSize = 12
+    const columnSize = 12
 
     const headFirstPosition = {
         x: Math.floor(Math.random() * rowSize), 

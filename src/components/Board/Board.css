@@ -12,5 +12,5 @@
 .column-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 60px;
+    gap: 25px;
 }
