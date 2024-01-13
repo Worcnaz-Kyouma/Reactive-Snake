@@ -41,43 +41,44 @@ export default function Game() {
         let status = 0
 
         let isApple = false
-        setFieldsValue(oldFieldsValue => {
-            console.log('old', oldFieldsValue)
-            let nextY = snakeData.headPosition.x + movementVector.x
-            if(nextY >= rowSize)
-                nextY = 0
-            let nextX = snakeData.headPosition.y + movementVector.y
-            if(nextX >= columnSize)
-                nextX = 0
 
-            if(oldFieldsValue[nextY][nextX] === 14488883){
-                isApple = true
-                status = 1
-                const newApplePosition = {
-                    x: 0, 
-                    y: 0
-                }
-                do{
-                    newApplePosition.x = Math.floor(Math.random() * rowSize)
-                    newApplePosition.y = Math.floor(Math.random() * columnSize)
-                } while(oldFieldsValue[newApplePosition.x][newApplePosition.y] > 0)
-                oldFieldsValue[newApplePosition.x][newApplePosition.y] = 14488883
+        const newFieldsValue = [ ...fieldsValue ]
 
-            } else if(oldFieldsValue[nextY][nextX] > 0){
-                status = 2
+        let nextY = snakeData.headPosition.x + movementVector.x
+        if(nextY >= rowSize)
+            nextY = 0
+        let nextX = snakeData.headPosition.y + movementVector.y
+        if(nextX >= columnSize)
+            nextX = 0
+
+        if(fieldsValue[nextY][nextX] === 14488883){
+            isApple = true
+            status = 1
+            const newApplePosition = {
+                x: 0, 
+                y: 0
             }
+            do{
+                newApplePosition.x = Math.floor(Math.random() * rowSize)
+                newApplePosition.y = Math.floor(Math.random() * columnSize)
+            } while(fieldsValue[newApplePosition.x][newApplePosition.y] > 0)
+            fieldsValue[newApplePosition.x][newApplePosition.y] = 14488883
 
-            oldFieldsValue[nextY][nextX] = snakeData.length + 1
+        } else if(fieldsValue[nextY][nextX] > 0){
+            status = 2
+        }
 
-            setSnakeData(oldData => ({
-                headPosition: { y: nextY, x: nextX  },
-                length: oldData.length + (isApple ? 1 : 0)
-            }))
+        newFieldsValue[nextY][nextX] = snakeData.length + 1
 
-            console.log('new', oldFieldsValue)
-            return oldFieldsValue
-        })
+        const newSnakeData = {
+            headPosition: { y: nextY, x: nextX  },
+            length: snakeData.length + (isApple ? 1 : 0)
+        }
 
+        setSnakeData(newSnakeData)
+        setFieldsValue(newFieldsValue)
+
+        console.log(fieldsValue)
         return status
     }
 
@@ -97,19 +98,22 @@ export default function Game() {
         const status = moveHead()
         updateBoard(status)
 
-        if(status === 2)
-            setGameRunning(false)
-        //else
-        //    setTimeout(process, 1000)
+        return status
     }
 
-    useEffect(() => process(), [])
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const status = process()
+        }, 1000)
+        
+        return () => clearInterval(timer)
+    }, [fieldsValue, snakeData])
 
     return (
         isGameRunning
             ?   <div key={0} className="board">
                     {fieldsValue.map((column, columnIndex) => 
-                    <div className="column-wrapper">{column.map((fieldValue, rowIndex) => 
+                    <div key={columnIndex} className="column-wrapper">{column.map((fieldValue, rowIndex) => 
                         <Area key={(rowIndex*columnIndex + rowIndex)*1000 + fieldValue} symbolicValue={fieldValue} />)}
                     </div>
                     )}
