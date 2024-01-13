@@ -1,6 +1,6 @@
 import "./Board.css"
 import Area from "../Area/Area"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 
 type GameData = {
     rowSize:number,
@@ -40,22 +40,31 @@ type GameData = {
 export default function Board({ rowSize, columnSize, gameStatus, setGameStatus, snakeData, setSnakeData, movementVector, setMovementVector, fieldsValue, setFieldsValue } : GameData) {
     const processLooperIDRef = useRef<number | undefined>(undefined)
     
-    function moveHead() {
+    async function moveHead() {
         let isApple = false
 
         const newFieldsValue = [ ...fieldsValue ]
+        
+        let currentMovementVector = {x:0, y:0}
 
-        let nextX = snakeData.headPosition.x + movementVector.x
+        await new Promise((resolve, reject) => {
+            setMovementVector(movementVector => {
+                currentMovementVector = movementVector
+                resolve(currentMovementVector)
+                return movementVector
+            })
+        })
+
+        let nextX = snakeData.headPosition.x + currentMovementVector.x
         if(nextX >= rowSize)
             nextX = 0
         else if(nextX < 0)
             nextX = rowSize - 1
-        let nextY = snakeData.headPosition.y + movementVector.y
+        let nextY = snakeData.headPosition.y + currentMovementVector.y
         if(nextY >= columnSize)
             nextY = 0
         else if(nextY < 0)
             nextY = columnSize - 1
-        console.log(nextX, nextY)
 
         if(fieldsValue[nextX][nextY] === 14488883){
             isApple = true
@@ -97,18 +106,20 @@ export default function Board({ rowSize, columnSize, gameStatus, setGameStatus, 
         }
     }
 
-    function process() {
-        const isAppleEatted = moveHead()
+    async function process() {
+        const isAppleEatted = await moveHead()
         updateBoard(isAppleEatted)
     }
-    
-    if(gameStatus){
-        clearTimeout(processLooperIDRef.current)
 
-        processLooperIDRef.current = setTimeout(() => {
-            process()
-        }, 1000)
-    }
+    useEffect(() => {
+        if(gameStatus){
+            clearTimeout(processLooperIDRef.current)
+    
+            processLooperIDRef.current = setTimeout(() => {
+                process()
+            }, 1000)
+        }
+    }, [fieldsValue])    
 
     return (
         gameStatus
