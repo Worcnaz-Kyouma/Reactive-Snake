@@ -1,0 +1,14 @@
+.field {
+    width: 75px;
+    height: 75px;
+
+    background-color: #161b22;
+}
+
+.apple {
+    background-color: #dd1533;
+}
+
+.snake {
+    background-color: #9FC490;
+}
