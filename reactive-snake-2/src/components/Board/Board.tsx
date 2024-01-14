@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { APPLE, columnSize, rowSize } from "../../constants"
 import Field from "../Field/Field"
 
