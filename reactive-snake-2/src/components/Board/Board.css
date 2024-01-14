@@ -6,11 +6,11 @@
 
     display: flex;
     flex-wrap: wrap;
-    gap: 25px;
+    gap: 15px;
 }
 
 .column-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
 }
