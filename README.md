@@ -1,4 +1,4 @@
-<p align="center"><img src="https://cdn.discordapp.com/attachments/679383239948894220/1196200159873355866/Snake_OG-logo-removebg-preview.png?ex=65b6c336&is=65a44e36&hm=f409e240072a7f32cf32ccf4dc4392bd8aad670908c0c815ffc3fa507f392c45&" width="30%" height="20%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/Nicolas-Prado/Reactive-Snake/main/icon.png" width="30%" height="20%"></p>
 
 ## Proposta do projeto
 Desenvolver o jogo "Snake" na web, buscando desenvolver um algoritmo interessante que pensei para implementa-lo. Junto a isto, usei tecnologias que desejo me aperfeiçoar, juntando assim o perfeito ao agradavel :3
